@@ -10,6 +10,11 @@
 #include <dt-bindings/zmk/outputs.h>
 #include "helper.h"
 
+#define BASE 0
+#define NUM 1
+#define NAV 2
+#define TRI 3
+#define CONF 4
 #define XXX &none
 #define ___ &trans
 #define MEH LC(LA(LSHIFT))
@@ -67,10 +72,10 @@ ZMK_BEHAVIOR(hmr, hold_tap,  // right-hand HRMs
 
 #undef COMBO_TERM
 #define COMBO_TERM 40  // timeout of 40ms (default is 30ms if omitted)
-ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    DEF)   // lock screen by pressing ESC Q W
-//ZMK_COMBO(conflayer,    &to 4,           0 11,    DEF)   // ESC BSPC
-//ZMK_COMBO(capsword,     &caps_word,     13 22,    DEF)   // A:
-//ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,    DEF)   // FJ
+ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    BASE)   // lock screen by pressing ESC Q W
+//ZMK_COMBO(conflayer,    &to CONF,           0 11,  BASE)   // ESC BSPC
+//ZMK_COMBO(capsword,     &caps_word,     13 22,  BASE)   // A:
+//ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,  BASE)   // FJ
 
 ZMK_BEHAVIOR(smile, macro,
     wait-ms = <100>;
@@ -109,7 +114,7 @@ ZMK_LAYER(default_layer,
                 &kp ESC    &kp Q    &kp W  &kp E  &kp R    &kp T              &kp Y       &kp U    &kp I      &kp O    &kp P     &kp BSPC
                 &kp TAB    HRML(A,  S,     D,     F,       G)                 HRMR(H,     J,       K,         L,       SEMI)     &kp ENTER
                 XXX        &kp Z    &kp X  &kp C  &kp V    &kp B              &kp N       &kp M    &kp COMMA  &kp DOT  &kp FSLH  &kp DEL
-                                           XXX    &mo 1    &kp SPACE          &kp RSHIFT  &mo 2    XXX
+                                           XXX    &mo NUM  &kp SPACE          &kp RSHIFT  &mo NAV  XXX
 )
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
@@ -171,10 +176,8 @@ ZMK_LAYER(tri_layer,
 //                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(config_layer,
-                &to 0     XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
+                &to BASE  XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
                 XXX       BT1    BT2   BT3    BT4     BT5             XXX      XXX     XXX     XXX     BTC    XXX
                 XXX       XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
                                        ___    &kp C   &kp O           &kp N    &kp F   ___     
 )
-
-//&bt BT_CLR &bt BT_SEL 0    
