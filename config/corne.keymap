@@ -65,12 +65,12 @@ ZMK_BEHAVIOR(hmr, hold_tap,  // right-hand HRMs
     hold-trigger-key-positions = <KEYS_L THUMBS>;
 )
 
-//#undef COMBO_TERM
-//#define COMBO_TERM 40  // timeout of 40ms (default is 30ms if omitted)
-//ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    DEF)   // lock screen by pressing ESC Q W
-//ZMK_COMBO(conflayer,    &to 4,           0 11,    DEF)   // ESC BSPC
+#undef COMBO_TERM
+#define COMBO_TERM 40  // timeout of 40ms (default is 30ms if omitted)
+ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    DEF)   // lock screen by pressing ESC Q W
+ZMK_COMBO(conflayer,    &to 4,           0 11,    DEF)   // ESC BSPC
 //ZMK_COMBO(capsword,     &caps_word,     13 22,    DEF)   // A:
-//ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,    DEF)   // FJ
+ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,    DEF)   // FJ
 
 //ZMK_BEHAVIOR(smile, macro,
 //    wait-ms = <100>;
