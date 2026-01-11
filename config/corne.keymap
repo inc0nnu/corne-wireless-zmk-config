@@ -99,11 +99,11 @@ ZMK_CONDITIONAL_LAYER (1 2, 3)
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
 //              │ ESC  │  Q  │  W  │  E  │  R  │  T  │     │  Y   │  U   │  I  │  O  │  P  │  BSP │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  12  │  13 │ 14  │  15 │  16 │ 17  │     │  18  │  19  │  20 │  21 │ 22  │  23  │
+//              │  TAB │  A  │  S  │  D  │  F  │  G  │     │  H   │  J   │  K  │  L  │ ;   │  ENT │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  24  │  25 │  26 │  27 │  28 │  29 │     │  30  │  31  │  32 │  33 │ 34  │  35  │
+//              │      │  Z  │  X  │  C  │  V  │  B  │     │  N   │  M   │  ,  │  .  │ /   │  DEL │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
+//                                 │     │ NUM │ SPC │     │  39  │  40  │  41 │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(default_layer,
                 &kp ESC    &kp Q    &kp W  &kp E  &kp R    &kp T              &kp Y       &kp U    &kp I      &kp O    &kp P     &kp BSPC
@@ -153,10 +153,11 @@ ZMK_LAYER(nav_layer,
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
 //                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
+//    &arrow van de E, &task van de I, &sad van de , en &smile van de .
 ZMK_LAYER(tri_layer,
-                XXX  XXX        XXX   &arrow   XXX    XXX             XXX       XXX    &task   XXX      XXX        XXX
+                XXX  XXX        XXX   XXX   XXX    XXX             XXX       XXX    XXX   XXX      XXX        XXX
                 XXX  HRML(F1,   F2,   F3,      F4,    F5)             HRMR(F6,  F7,    F8,     F9,      F10)       &kp F11
-                XXX  &kp TILDE  XXX   XXX      XXX    XXX             XXX       XXX    &sad    &smile   &kp BSLH   XXX
+                XXX  &kp TILDE  XXX   XXX      XXX    XXX             XXX       XXX    XXX    XXX   &kp BSLH   XXX
                                       ___      ___    ___             ___       ___    ___
 )
 
