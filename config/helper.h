@@ -75,7 +75,6 @@
 #define ZMK_COMBO_4_ARGS(name, combo_bindings, keypos, combo_layers) \
     ZMK_COMBO_5_ARGS(name, combo_bindings, keypos, combo_layers, COMBO_TERM)
 #define ZMK_COMBO_5_ARGS(name, combo_bindings, keypos, combo_layers, combo_timeout) \
-    / { \
         combos { \
             compatible = "zmk,combos"; \
             combo_ ## name { \
@@ -85,8 +84,7 @@
                 layers = <combo_layers>; \
                 COMBO_HOOK \
             }; \
-        }; \
-    };
+        };
 
 /* ZMK_CONDITIONAL_LAYER */
 
