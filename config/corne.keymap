@@ -13,6 +13,12 @@
 #define XXX &none
 #define ___ &trans
 #define MEH LC(LA(LSHIFT))
+#define BTC &bt BT_CLR
+#define BT1 &bt BT_SEL 0
+#define BT2 &bt BT_SEL 1
+#define BT3 &bt BT_SEL 2
+#define BT4 &bt BT_SEL 3
+#define BT5 &bt BT_SEL 4
 
 #define QUICK_TAP_MS 175
 #define TAPPING_TERM_MS 300
@@ -164,10 +170,10 @@ ZMK_LAYER(tri_layer,
 //                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(config_layer,
-                &to 0     XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX         XXX
-                XXX       BT_SEL_ROW                  XXX             XXX      XXX     XXX     XXX     BT_SEL_CLR  XXX
-                XXX       XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX         XXX
+                &to 0     XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
+                XXX       BT1    BT2   BT3    BT4     BT5             XXX      XXX     XXX     XXX     BTC    XXX
+                XXX       XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
                                        ___    &kp C   &kp O           &kp N    &kp F   ___     
 )
 
-    
+//&bt BT_CLR &bt BT_SEL 0    
