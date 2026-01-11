@@ -59,39 +59,39 @@ ZMK_BEHAVIOR(hmr, hold_tap,  // right-hand HRMs
     hold-trigger-key-positions = <KEYS_L THUMBS>;
 )
 
-#undef COMBO_TERM
-#define COMBO_TERM 40  // timeout of 40ms (default is 30ms if omitted)
-ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    DEF)   // lock screen by pressing ESC Q W
-ZMK_COMBO(conflayer,    &to 4,           0 11,    DEF)   // ESC BSPC
-ZMK_COMBO(capsword,     &caps_word,     13 22,    DEF)   // A:
-ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,    DEF)   // FJ
+//#undef COMBO_TERM
+//#define COMBO_TERM 40  // timeout of 40ms (default is 30ms if omitted)
+//ZMK_COMBO(lockscr,      &kp LG(L),      0 1 2,    DEF)   // lock screen by pressing ESC Q W
+//ZMK_COMBO(conflayer,    &to 4,           0 11,    DEF)   // ESC BSPC
+//ZMK_COMBO(capsword,     &caps_word,     13 22,    DEF)   // A:
+//ZMK_COMBO(ctrlspce,     &kp LC(SPACE),  16 19,    DEF)   // FJ
 
-ZMK_BEHAVIOR(smile, macro,
-    wait-ms = <100>;
-    tap-ms = <5>;
-    bindings = <&macro_tap &kp COLON &kp MINUS &kp RPAR>;
-)
-
-ZMK_BEHAVIOR(sad, macro,
-    wait-ms = <100>;
-    tap-ms = <5>;
-    bindings = <&macro_tap &kp COLON &kp MINUS &kp LPAR>;
-)
-ZMK_BEHAVIOR(arrow, macro,
-    wait-ms = <100>;
-    tap-ms = <5>;
-    bindings = <&macro_tap &kp MINUS &kp GT>;
-)
-ZMK_BEHAVIOR(task, macro,
-    wait-ms = <100>;
-    tap-ms = <5>;
-    bindings = <&macro_tap &kp MINUS &kp SPACE &kp LBKT &kp SPACE &kp RBKT &kp SPACE>;
-)
+//ZMK_BEHAVIOR(smile, macro,
+//    wait-ms = <100>;
+//    tap-ms = <5>;
+//    bindings = <&macro_tap &kp COLON &kp MINUS &kp RPAR>;
+//)
+//
+//ZMK_BEHAVIOR(sad, macro,
+//    wait-ms = <100>;
+//    tap-ms = <5>;
+//    bindings = <&macro_tap &kp COLON &kp MINUS &kp LPAR>;
+//)
+//ZMK_BEHAVIOR(arrow, macro,
+//    wait-ms = <100>;
+//    tap-ms = <5>;
+//    bindings = <&macro_tap &kp MINUS &kp GT>;
+//)
+//ZMK_BEHAVIOR(task, macro,
+//    wait-ms = <100>;
+//    tap-ms = <5>;
+//    bindings = <&macro_tap &kp MINUS &kp SPACE &kp LBKT &kp SPACE &kp RBKT &kp SPACE>;
+//)
 
 ZMK_CONDITIONAL_LAYER (1 2, 3)
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
-//              │  0   │  1  │  2  │  3  │  4  │  5  │     │  6   │  7   │  8  │  9  │ 10  │  11  │
+//              │ ESC  │  Q  │  W  │  E  │  R  │  T  │     │  Y   │  U   │  I  │  O  │  P  │  BSP │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
 //              │  12  │  13 │ 14  │  15 │  16 │ 17  │     │  18  │  19  │  20 │  21 │ 22  │  23  │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
