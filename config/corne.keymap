@@ -106,13 +106,13 @@ ZMK_CONDITIONAL_LAYER (1 2, 3)
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
 //              │      │  Z  │  X  │  C  │  V  │  B  │     │  N   │  M   │  ,  │  .  │ /   │  DEL │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │ NUM │ NUM │ SPC │     │ SHFT │ NAV  │ NAV │
+//                                 │  ?  │ NUM │ SPC │     │ SHFT │ NAV  │CAPW │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(default_layer,
-                &kp ESC    &kp Q    &kp W  &kp E  &kp R    &kp T              &kp Y       &kp U    &kp I      &kp O    &kp P     &kp BSPC
-                &kp TAB    HRML(A,  S,     D,     F,       G)                 HRMR(H,     J,       K,         L,       SEMI)     &kp ENTER
-                XXX        &kp Z    &kp X  &kp C  &kp V    &kp B              &kp N       &kp M    &kp COMMA  &kp DOT  &kp FSLH  &kp DEL
-                                           &mo NUM    &mo NUM  &kp SPACE          &kp RSHIFT  &mo NAV  &mo NAV
+                &kp ESC    &kp Q    &kp W  &kp E     &kp R    &kp T              &kp Y       &kp U    &kp I      &kp O    &kp P     &kp BSPC
+                &kp TAB    HRML(A,  S,     D,        F,       G)                 HRMR(H,     J,       K,         L,       SEMI)     &kp ENTER
+                XXX        &kp Z    &kp X  &kp C     &kp V    &kp B              &kp N       &kp M    &kp COMMA  &kp DOT  &kp FSLH  &kp DEL
+                                           &kp QMARK &mo NUM  &kp SPACE          &kp RSHIFT  &mo NAV  &caps_word
 )
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
@@ -122,7 +122,7 @@ ZMK_LAYER(default_layer,
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
 //              │      │  `  │  [  │  ]  │  -  │  +  │     │  *   │  =   │  ,  │  .  │  /  │  |   │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │ NUM │ NUM │ SPC │     │ SHFT │ NAV  │ NAV │
+//                                 │  ?  │ NUM │ SPC │     │ SHFT │ NAV  │CAPW │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(num_layer,
                 &kp CARET &kp EXCL  &kp AT   &kp HASH &kp DOLLAR &kp PERCENT   &kp UNDER  &kp AMPS   &kp STAR   &kp LPAR  &kp RPAR  &kp BSPC
@@ -132,29 +132,29 @@ ZMK_LAYER(num_layer,
 )
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
-//              │      │     │     │     │     │     │     │      │  ⌥←  │  ↑  │  ⌥→ │PGUP │ ^BSP │
+//              │ ESC  │     │     │     │     │     │     │      │  ⌥←  │  ↑  │  ⌥→ │PGUP │ ^BSP │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │      │  |  │  ;  │  -  │  ,  │ DEL │     │  18  │   ←  │  ↓  │  →  │ 22  │ ⌥ENT │
+//              │ TAB  │  |  │  ;  │  -  │  ,  │ ^DEL│     │      │   ←  │  ↓  │  →  │     │ ⌥ENT │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  24  │  25 │  26 │  27 │  28 │  29 │     │  30  │  31  │     │  33 │ 34  │ ^DEL │
+//              │      │     │     │     │     │     │     │      │ HOME │     │ END │PGDN │  DEL │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
+//                                 │  ?  │ NUM │ SPC │     │ SHFT │  NAV │CAPW │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(nav_layer,
-   	 	        XXX  XXX        XXX    XXX     XXX     XXX           XXX          &kp LA(LEFT) &kp UP    &kp LA(RIGHT)  &kp PAGE_UP    &kp LC(BSPC)
-   	            XXX  HRML(PIPE, SEMI,  MINUS,  COMMA,  DEL)          XXX          &kp LEFT     &kp DOWN  &kp RIGHT      XXX            &kp LA(ENTER) 
-   	            XXX  XXX        XXX    XXX     XXX     XXX           XXX          &kp HOME     XXX       &kp END        &kp PAGE_DOWN  &kp LC(DEL)
-                                       ___     ___     ___           ___          ___          ___ 
+   	 	        &kp ESC XXX        XXX    XXX     XXX     XXX           XXX    &kp LA(LEFT) &kp UP    &kp LA(RIGHT)  &kp PAGE_UP    &kp LC(BSPC)
+   	            &kp TAB HRML(PIPE, SEMI,  MINUS,  COMMA,  LC(DEL))      XXX    &kp LEFT     &kp DOWN  &kp RIGHT      XXX            &kp LA(ENTER) 
+   	            XXX     XXX        XXX    XXX     XXX     XXX           XXX    &kp HOME     XXX       &kp END        &kp PAGE_DOWN  &kp DEL
+                                          ___     ___     ___           ___    ___          ___ 
 )
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
-//              │  0   │  1  │  2  │  3  │  4  │  5  │     │  6   │  7   │  8  │  9  │ 10  │  11  │
+//              │      │     │     │     │     │     │     │      │      │ -[] │ :-( │ :-) │      │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  12  │  13 │ 14  │  15 │  16 │ 17  │     │  18  │  19  │  20 │  21 │ 22  │  23  │
+//              │      │  F1 │ F2  │  F3 │  F4 │ F5  │     │  F6  │  F7  │  F8 │  F9 │ F10 │ F11  │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  24  │  25 │  26 │  27 │  28 │  29 │     │  30  │  31  │  32 │  33 │ 34  │  35  │
+//              │      │  ~  │     │     │     │     │     │      │      │     │     │  \  │      │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
+//                                 │  ?  │ NUM │ SPC │     │ SHFT │ NAV  │CAPW │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 
 ZMK_LAYER(tri_layer,
@@ -165,13 +165,13 @@ ZMK_LAYER(tri_layer,
 )
 
 //              ┌──────┬─────┬─────┬─────┬─────┬─────┐     ┌──────┬──────┬─────┬─────┬─────┬──────┐
-//              │  0   │  1  │  2  │  3  │  4  │  5  │     │  6   │  7   │  8  │  9  │ 10  │  11  │
+//              │ BASE │     │     │     │     │     │     │      │      │     │     │     │      │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  12  │  13 │ 14  │  15 │  16 │ 17  │     │  18  │  19  │  20 │  21 │ 22  │  23  │
+//              │      │ BT1 │ BT2 │ BT3 │ BT4 │ BT5 │     │      │      │     │     │ BTC │      │
 //              ├──────┼─────┼─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┼─────┼──────┤
-//              │  24  │  25 │  26 │  27 │  28 │  29 │     │  30  │  31  │  32 │  33 │ 34  │  35  │
+//              │      │     │     │     │     │     │     │      │      │     │     │     │      │
 //              └──────┴─────┴─────┼─────┼─────┼─────┤     ├──────┼──────┼─────┼─────┴─────┴──────┘
-//                                 │  36 │  37 │  38 │     │  39  │  40  │  41 │
+//                                 │  ?  │  C  │  O  │     │  N   │  F   │CAPW │
 //                                 └─────┴─────┴─────┘     └──────┴──────┴─────┘
 ZMK_LAYER(config_layer,
                 &to BASE  XXX    XXX   XXX    XXX     XXX             XXX      XXX     XXX     XXX     XXX    XXX
