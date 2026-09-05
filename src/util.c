@@ -54,41 +54,47 @@ void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, bool charging, const c
     init_label_dsc(&label_dsc_symbol, LVGL_FOREGROUND, &lv_font_montserrat_18,
                   LV_TEXT_ALIGN_RIGHT);
 
-    // No battery outline icon anymore - just the percentage, left-aligned,
-    // starting near the left edge of the row.
+    // No battery outline icon anymore - just the percentage (no "%" sign),
+    // left-aligned, starting near the left edge of the row.
     //
     // While charging, the nRF52's charge-rail ADC can't read a true battery
     // voltage, so the percentage itself is typically stuck near 100% in
     // that state (a hardware limitation, not something this screen can see
     // through) - show a charging glyph instead of a misleading "100%".
+    //
+    // The symbol glyph (montserrat_18) actually renders visually taller
+    // than the percentage digits (montserrat_20), so the percentage is
+    // nudged down a few px to align their vertical centers rather than
+    // their top-left draw origins.
     if (charging) {
-        lv_canvas_draw_text(canvas, 2, 2, 45, &label_dsc_pct, LV_SYMBOL_CHARGE);
+        lv_canvas_draw_text(canvas, 2, 5, 45, &label_dsc_pct, LV_SYMBOL_CHARGE);
     } else {
         char pct_text[6] = {};
-        snprintf(pct_text, sizeof(pct_text), "%d%%", battery_pct);
-        lv_canvas_draw_text(canvas, 2, 2, 45, &label_dsc_pct, pct_text);
+        snprintf(pct_text, sizeof(pct_text), "%d", battery_pct);
+        lv_canvas_draw_text(canvas, 2, 5, 45, &label_dsc_pct, pct_text);
     }
 
     // Connection / output symbol, right-aligned.
-    lv_canvas_draw_text(canvas, 0, 4, CANVAS_SIZE, &label_dsc_symbol, symbol);
+    lv_canvas_draw_text(canvas, 0, 1, CANVAS_SIZE, &label_dsc_symbol, symbol);
 }
 
-void draw_bt_logo(lv_obj_t *canvas, lv_coord_t cx, lv_coord_t cy, lv_coord_t rw, lv_coord_t rh) {
-    lv_draw_line_dsc_t line_dsc;
-    init_line_dsc(&line_dsc, LVGL_FOREGROUND, 2);
+// The real Bluetooth logo, traced from the official glyph (supplied by Ivo)
+// and downsampled to a fixed BT_LOGO_W x BT_LOGO_H 1bpp bitmap, MSB-first,
+// each row padded to a byte boundary. 1 = draw in LVGL_FOREGROUND, 0 = leave
+// untouched (background is expected to already be filled by the caller).
+static const uint8_t bt_logo_bits[BT_LOGO_H][2] = {
+    {0x06, 0x00}, {0x06, 0x00}, {0x07, 0x00}, {0xc7, 0x80}, {0xe6, 0xc0}, {0x76, 0xe0},
+    {0x3f, 0xc0}, {0x1f, 0x80}, {0x0f, 0x00}, {0x0f, 0x00}, {0x1f, 0x80}, {0x1f, 0xc0},
+    {0x36, 0xe0}, {0xe6, 0xe0}, {0xc7, 0x80}, {0x07, 0x80}, {0x07, 0x00}, {0x06, 0x00},
+};
 
-    // Vertical spine, top to bottom.
-    lv_point_t spine[2] = {{cx, cy - rh}, {cx, cy + rh}};
-    lv_canvas_draw_line(canvas, spine, 2, &line_dsc);
-
-    // Upper "flag": top of the spine down to the single right-hand point.
-    // Both diagonals meeting at the SAME point (cx + rw, cy) is what makes
-    // this read as the actual Bluetooth logo shape (two triangles sharing
-    // a vertex on the spine's right side) instead of two crossed strokes.
-    lv_point_t diag_top[2] = {{cx, cy - rh}, {cx + rw, cy}};
-    lv_canvas_draw_line(canvas, diag_top, 2, &line_dsc);
-
-    // Lower "flag": the same right-hand point down to the bottom of the spine.
-    lv_point_t diag_bottom[2] = {{cx + rw, cy}, {cx, cy + rh}};
-    lv_canvas_draw_line(canvas, diag_bottom, 2, &line_dsc);
+void draw_bt_logo(lv_obj_t *canvas, lv_coord_t x, lv_coord_t y) {
+    for (int row = 0; row < BT_LOGO_H; row++) {
+        for (int col = 0; col < BT_LOGO_W; col++) {
+            uint8_t byte = bt_logo_bits[row][col / 8];
+            if (byte & (0x80 >> (col % 8))) {
+                lv_canvas_set_px_color(canvas, x + col, y + row, LVGL_FOREGROUND);
+            }
+        }
+    }
 }

@@ -108,20 +108,23 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     lv_draw_line_dsc_t line_dsc;
     init_line_dsc(&line_dsc, LVGL_FOREGROUND, 1);
     lv_draw_label_dsc_t label_dsc_left;
-    init_label_dsc(&label_dsc_left, LVGL_FOREGROUND, &lv_font_montserrat_18, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc_left, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_LEFT);
     lv_draw_label_dsc_t label_dsc_right;
-    init_label_dsc(&label_dsc_right, LVGL_FOREGROUND, &lv_font_montserrat_18, LV_TEXT_ALIGN_RIGHT);
+    init_label_dsc(&label_dsc_right, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_RIGHT);
 
     // Fill background
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
     // Sparkline box: inset 1px on every side so it doesn't touch the
-    // screen edge, and 5px taller than before (note: the graph canvas's
-    // own available height shrank by 4px, from 64 to 60, to give the icon
-    // row its extra 4px above - see the offset comment block up top - so
-    // this box and the numbers below it now fill that 60px almost exactly).
-    lv_canvas_draw_rect(canvas, 1, 1, 66, 41, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 2, 2, 64, 39, &rect_black_dsc);
+    // screen edge, extended 5px further at the bottom on top of the
+    // earlier 5px height increase. Note: the graph canvas's own available
+    // height shrank by 4px, from 64 to 60, to give the icon row its extra
+    // 4px above (see the offset comment block up top) - between that and
+    // this second extension the numbers below are now packed in quite
+    // tightly, worth double-checking on the real screen that they aren't
+    // clipped by the Bluetooth section below.
+    lv_canvas_draw_rect(canvas, 1, 1, 66, 46, &rect_white_dsc);
+    lv_canvas_draw_rect(canvas, 2, 2, 64, 44, &rect_black_dsc);
 
     int max = 0;
     int min = 256;
@@ -149,17 +152,13 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     // last 30 minutes (left) and over the last 30 seconds (right). Note
     // that max_30s can mathematically never exceed max_30m, since the 30s
     // window is always a subset of the samples in the 30m window.
-    //
-    // y=42 sits right at the frame's new bottom edge (1 + 41 = 42), so
-    // there's effectively no spare room left below - worth double-checking
-    // on the real screen that these aren't touching the frame or clipped.
     char max_30m_text[6] = {};
     snprintf(max_30m_text, sizeof(max_30m_text), "%d", state->wpm_max_30m);
-    lv_canvas_draw_text(canvas, 2, 42, 30, &label_dsc_left, max_30m_text);
+    lv_canvas_draw_text(canvas, 2, 47, 30, &label_dsc_left, max_30m_text);
 
     char max_30s_text[6] = {};
     snprintf(max_30s_text, sizeof(max_30s_text), "%d", state->wpm_max_30s);
-    lv_canvas_draw_text(canvas, 36, 42, 30, &label_dsc_right, max_30s_text);
+    lv_canvas_draw_text(canvas, 36, 47, 30, &label_dsc_right, max_30s_text);
 
     rotate_canvas(canvas, cbuf);
 }
@@ -170,18 +169,18 @@ static void draw_bt(lv_obj_t *widget, lv_color_t cbuf[], const struct central_st
     lv_draw_rect_dsc_t rect_black_dsc;
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
     lv_draw_label_dsc_t label_dsc;
-    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_18, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_LEFT);
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
-    // Roughly the same size as the profile digit next to it (montserrat_18
-    // digits are about 14px tall), and moved closer to it now that it's
-    // smaller.
-    draw_bt_logo(canvas, 12, 21, 4, 7);
+    // The real Bluetooth logo bitmap (traced from Ivo's reference image),
+    // placed directly to the left of the profile digit and top-aligned with
+    // it so the two read as a pair.
+    draw_bt_logo(canvas, 16, 11);
 
     char profile_text[3] = {};
     snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);
-    lv_canvas_draw_text(canvas, 32, 13, 30, &label_dsc, profile_text);
+    lv_canvas_draw_text(canvas, 30, 11, 30, &label_dsc, profile_text);
 
     rotate_canvas(canvas, cbuf);
 }

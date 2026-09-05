@@ -15,10 +15,13 @@
 
 #define CANVAS_SIZE 68
 
-#define LVGL_BACKGROUND                                                                          \
-    IS_ENABLED(CONFIG_NICE_VIEW_WIDGET_INVERTED) ? lv_color_black() : lv_color_white()
-#define LVGL_FOREGROUND                                                                          \
-    IS_ENABLED(CONFIG_NICE_VIEW_WIDGET_INVERTED) ? lv_color_white() : lv_color_black()
+// Hardcoded to white-on-black rather than branching on
+// CONFIG_NICE_VIEW_WIDGET_INVERTED: that Kconfig symbol isn't reliably
+// taking effect for this nice_view_adapter+nice_view shield combination
+// (screens were still rendering black-on-white with it set to y in
+// corne.conf), so this no longer depends on it at all.
+#define LVGL_BACKGROUND lv_color_black()
+#define LVGL_FOREGROUND lv_color_white()
 
 struct battery_status_state {
     uint8_t level;
@@ -53,15 +56,14 @@ void init_arc_dsc(lv_draw_arc_dsc_t *arc_dsc, lv_color_t color, uint8_t width);
  */
 void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, bool charging, const char *symbol);
 
+#define BT_LOGO_W 11
+#define BT_LOGO_H 18
+
 /**
- * Draws a minimal Bluetooth "rune" glyph: a vertical spine the full height
- * of the glyph, plus two diagonals that both meet the spine's endpoints and
- * a single point on the right at the same height as the spine's center
- * (cx + rw, cy) - this is what forms the two triangular "flags" that make
- * it read as the actual Bluetooth logo shape, rather than two unrelated
- * diagonal strokes.
- *
- * @param rw Half-width of the glyph.
- * @param rh Half-height of the glyph.
+ * Draws the real Bluetooth logo shape (traced from the official glyph and
+ * baked into a small fixed-size 1bpp bitmap - see bt_logo_bits in util.c),
+ * top-left corner at (x, y). Every set bit is painted in LVGL_FOREGROUND;
+ * unset bits are left untouched (the caller is expected to have already
+ * filled the background).
  */
-void draw_bt_logo(lv_obj_t *canvas, lv_coord_t cx, lv_coord_t cy, lv_coord_t rw, lv_coord_t rh);
+void draw_bt_logo(lv_obj_t *canvas, lv_coord_t x, lv_coord_t y);
