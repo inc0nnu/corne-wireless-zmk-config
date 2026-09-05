@@ -1,0 +1,27 @@
+# Copyright (c) 2026 The ZMK Contributors
+#
+# SPDX-License-Identifier: MIT
+#
+# This module replaces nice_view's built-in custom status screen
+# (CONFIG_NICE_VIEW_WIDGET_STATUS) with a fully custom one:
+#   - battery percentage as text on both halves (plus a static,
+#     upright battery outline "logo" instead of a dynamic fill bar)
+#   - a Bluetooth glyph + active profile digit instead of 5 circles
+#   - the WPM sparkline graph, now showing rolling-max WPM over the
+#     last 30 minutes and the last 30 seconds
+#   - a static "always flowing" Japanese-text graphic on the
+#     peripheral (right) half instead of the random balloon/mountain
+#
+# It intentionally reuses existing ZMK / nice_view Kconfig symbols
+# (CONFIG_ZMK_DISPLAY, CONFIG_ZMK_SPLIT_ROLE_CENTRAL,
+# CONFIG_NICE_VIEW_WIDGET_INVERTED) rather than inventing new ones,
+# and only pulls in the LVGL/font/WPM support this screen needs.
+
+config NICE_VIEW_CUSTOM_SCREEN
+    bool
+    default y
+    depends on ZMK_DISPLAY
+    select LV_USE_IMG
+    select LV_USE_CANVAS
+    select LV_FONT_MONTSERRAT_18
+    select ZMK_WPM if !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL

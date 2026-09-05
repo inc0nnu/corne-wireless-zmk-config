@@ -1,0 +1,4 @@
+name: nice_view_custom_screen
+build:
+  cmake: .
+  kconfig: Kconfig
