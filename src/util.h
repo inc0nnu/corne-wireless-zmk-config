@@ -15,13 +15,18 @@
 
 #define CANVAS_SIZE 68
 
-// Hardcoded to white-on-black rather than branching on
-// CONFIG_NICE_VIEW_WIDGET_INVERTED: that Kconfig symbol isn't reliably
-// taking effect for this nice_view_adapter+nice_view shield combination
-// (screens were still rendering black-on-white with it set to y in
-// corne.conf), so this no longer depends on it at all.
-#define LVGL_BACKGROUND lv_color_black()
-#define LVGL_FOREGROUND lv_color_white()
+// Hardcoded rather than branching on CONFIG_NICE_VIEW_WIDGET_INVERTED:
+// that Kconfig symbol isn't reliably taking effect for this
+// nice_view_adapter+nice_view shield combination. On top of that, the
+// real hardware turned out to invert software colors: with
+// LVGL_BACKGROUND = lv_color_black() the panel still showed a light
+// background with dark content (confirmed by photo), so this panel's
+// black/white mapping is backwards from the usual LVGL convention -
+// hence lv_color_white() is what actually produces a dark/black-looking
+// background on screen, and lv_color_black() produces light/white
+// content.
+#define LVGL_BACKGROUND lv_color_white()
+#define LVGL_FOREGROUND lv_color_black()
 
 struct battery_status_state {
     uint8_t level;

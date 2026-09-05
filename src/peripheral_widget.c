@@ -26,9 +26,12 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 // balloon/mountain art. See src/jp_text_image.c.
 LV_IMG_DECLARE(jp_text_img);
 
-// Same physical band as the icon row on the central half: 130-160, i.e.
-// offset 160-68 = 92. See central_widget.c for the full explanation of
-// this offset math.
+// Roughly the same physical band as the icon row on the central half,
+// offset 160-68 = 92 - "roughly" because the Japanese-text art image below
+// is 131 native pixels wide rather than 130, borrowing 1px from the icon
+// row's own visible height (30 -> 29) to give the art's frame 1px more
+// room between its top border and the kanji. See central_widget.c for the
+// full explanation of this offset math.
 #define ICON_OFFSET 92
 #define ICON_CANVAS_IDX 0
 
@@ -112,8 +115,8 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     lv_obj_align(icon, LV_ALIGN_TOP_LEFT, ICON_OFFSET, 0);
     lv_canvas_set_buffer(icon, widget->cbuf_icon, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
 
-    // Static Japanese-text graphic filling the remaining native-x 0..130
-    // (physical height 130 = 160 - the 30px icon row), drawn directly with
+    // Static Japanese-text graphic filling the remaining native-x 0..131
+    // (physical height 131 = 160 - the 29px icon row), drawn directly with
     // no runtime rotation, exactly like the stock balloon/mountain art.
     lv_obj_t *art = lv_img_create(widget->obj);
     lv_img_set_src(art, &jp_text_img);

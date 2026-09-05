@@ -35,18 +35,20 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 // actually used before the next canvas is drawn on top of it.
 //
 //   icon  (H=30): physical band 130-160, offset 160-68 = 92
-//   graph (H=60): physical band  70-130, offset 130-68 = 62
-//   bt    (H=44): physical band  26- 70, offset  70-68 =  2
+//   graph (H=68): physical band  62-130, offset 130-68 = 62
+//   bt    (H=36): physical band  26- 62, offset  62-68 = -6
 //   layer (H=26): physical band   0- 26, offset  26-68 = -42
 //
-// The icon row grew from H=26 to H=30 (4px taller); since the total is
-// fixed at 160, that 4px came out of the immediately adjacent graph
-// section (H=64 -> 60), so GRAPH_OFFSET moved from 66 to 62. The peripheral
-// half's Japanese-text image occupies the same freed-up space symmetrically
-// (native-x 0..130 instead of 0..134) - see peripheral_widget.c.
+// graph's H is now the full 68 (its entire canvas), i.e. BT_OFFSET was
+// pulled back far enough that bt's range no longer overlaps graph's range
+// at all - the WPM numbers were getting their bottom rows overwritten by
+// bt's background fill (real hardware, not just a hypothetical) once they
+// moved down to y=47, so graph needed all the room it could get. bt's own
+// H shrank from 44 to 36 to make room (its logo/digit content was moved up
+// - "kleinere padding" - to comfortably fit the smaller band).
 #define ICON_OFFSET 92
 #define GRAPH_OFFSET 62
-#define BT_OFFSET 2
+#define BT_OFFSET -6
 #define LAYER_OFFSET -42
 
 #define ICON_CANVAS_IDX 0
@@ -152,13 +154,17 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     // last 30 minutes (left) and over the last 30 seconds (right). Note
     // that max_30s can mathematically never exceed max_30m, since the 30s
     // window is always a subset of the samples in the 30m window.
+    //
+    // Draw width widened from 30 to 40: at font 20, a 3-digit value (e.g.
+    // "117") is wider than the old 30px box, which was silently clipping
+    // the last digit ("11" instead of "117").
     char max_30m_text[6] = {};
     snprintf(max_30m_text, sizeof(max_30m_text), "%d", state->wpm_max_30m);
-    lv_canvas_draw_text(canvas, 2, 47, 30, &label_dsc_left, max_30m_text);
+    lv_canvas_draw_text(canvas, 2, 47, 40, &label_dsc_left, max_30m_text);
 
     char max_30s_text[6] = {};
     snprintf(max_30s_text, sizeof(max_30s_text), "%d", state->wpm_max_30s);
-    lv_canvas_draw_text(canvas, 36, 47, 30, &label_dsc_right, max_30s_text);
+    lv_canvas_draw_text(canvas, 26, 47, 40, &label_dsc_right, max_30s_text);
 
     rotate_canvas(canvas, cbuf);
 }
@@ -175,12 +181,15 @@ static void draw_bt(lv_obj_t *widget, lv_color_t cbuf[], const struct central_st
 
     // The real Bluetooth logo bitmap (traced from Ivo's reference image),
     // placed directly to the left of the profile digit and top-aligned with
-    // it so the two read as a pair.
-    draw_bt_logo(canvas, 16, 11);
+    // it so the two read as a pair. Moved up (y 11 -> 8, "kleinere padding")
+    // to comfortably fit bt's own band now that it shrank from H=44 to
+    // H=36 (see the offset comment block up top), and both nudged 2px
+    // right to sit better centered in the row.
+    draw_bt_logo(canvas, 18, 8);
 
     char profile_text[3] = {};
     snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);
-    lv_canvas_draw_text(canvas, 30, 11, 30, &label_dsc, profile_text);
+    lv_canvas_draw_text(canvas, 32, 8, 30, &label_dsc, profile_text);
 
     rotate_canvas(canvas, cbuf);
 }
