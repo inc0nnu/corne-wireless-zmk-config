@@ -34,12 +34,18 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 // `cum_prev - H` to `cum_prev`, where H is how many of its rows are
 // actually used before the next canvas is drawn on top of it.
 //
-//   icon  (H=26): physical band 134-160, offset 160-68 = 92
-//   graph (H=64): physical band  70-134, offset 134-68 = 66
+//   icon  (H=30): physical band 130-160, offset 160-68 = 92
+//   graph (H=60): physical band  70-130, offset 130-68 = 62
 //   bt    (H=44): physical band  26- 70, offset  70-68 =  2
 //   layer (H=26): physical band   0- 26, offset  26-68 = -42
+//
+// The icon row grew from H=26 to H=30 (4px taller); since the total is
+// fixed at 160, that 4px came out of the immediately adjacent graph
+// section (H=64 -> 60), so GRAPH_OFFSET moved from 66 to 62. The peripheral
+// half's Japanese-text image occupies the same freed-up space symmetrically
+// (native-x 0..130 instead of 0..134) - see peripheral_widget.c.
 #define ICON_OFFSET 92
-#define GRAPH_OFFSET 66
+#define GRAPH_OFFSET 62
 #define BT_OFFSET 2
 #define LAYER_OFFSET -42
 
@@ -87,7 +93,7 @@ static void draw_icon(lv_obj_t *widget, lv_color_t cbuf[], const struct central_
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
-    draw_icon_row(canvas, state->battery, current_output_symbol(state));
+    draw_icon_row(canvas, state->battery, state->charging, current_output_symbol(state));
 
     rotate_canvas(canvas, cbuf);
 }
@@ -109,10 +115,13 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     // Fill background
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
-    // Sparkline box (unchanged in spirit from the stock nice!view graph,
-    // just shifted down and given more headroom).
-    lv_canvas_draw_rect(canvas, 0, 0, 68, 38, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 1, 1, 66, 36, &rect_black_dsc);
+    // Sparkline box: inset 1px on every side so it doesn't touch the
+    // screen edge, and 5px taller than before (note: the graph canvas's
+    // own available height shrank by 4px, from 64 to 60, to give the icon
+    // row its extra 4px above - see the offset comment block up top - so
+    // this box and the numbers below it now fill that 60px almost exactly).
+    lv_canvas_draw_rect(canvas, 1, 1, 66, 41, &rect_white_dsc);
+    lv_canvas_draw_rect(canvas, 2, 2, 64, 39, &rect_black_dsc);
 
     int max = 0;
     int min = 256;
@@ -132,7 +141,7 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     lv_point_t points[WPM_SPARKLINE_SAMPLES];
     for (int i = 0; i < WPM_SPARKLINE_SAMPLES; i++) {
         points[i].x = 3 + i * 6;
-        points[i].y = 32 - (state->wpm_sparkline[i] - min) * 28 / range;
+        points[i].y = 36 - (state->wpm_sparkline[i] - min) * 31 / range;
     }
     lv_canvas_draw_line(canvas, points, WPM_SPARKLINE_SAMPLES, &line_dsc);
 
@@ -140,6 +149,10 @@ static void draw_graph(lv_obj_t *widget, lv_color_t cbuf[], const struct central
     // last 30 minutes (left) and over the last 30 seconds (right). Note
     // that max_30s can mathematically never exceed max_30m, since the 30s
     // window is always a subset of the samples in the 30m window.
+    //
+    // y=42 sits right at the frame's new bottom edge (1 + 41 = 42), so
+    // there's effectively no spare room left below - worth double-checking
+    // on the real screen that these aren't touching the frame or clipped.
     char max_30m_text[6] = {};
     snprintf(max_30m_text, sizeof(max_30m_text), "%d", state->wpm_max_30m);
     lv_canvas_draw_text(canvas, 2, 42, 30, &label_dsc_left, max_30m_text);
@@ -161,7 +174,10 @@ static void draw_bt(lv_obj_t *widget, lv_color_t cbuf[], const struct central_st
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
-    draw_bt_logo(canvas, 18, 22, 7, 14);
+    // Roughly the same size as the profile digit next to it (montserrat_18
+    // digits are about 14px tall), and moved closer to it now that it's
+    // smaller.
+    draw_bt_logo(canvas, 12, 21, 4, 7);
 
     char profile_text[3] = {};
     snprintf(profile_text, sizeof(profile_text), "%d", state->active_profile_index + 1);

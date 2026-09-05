@@ -47,30 +47,30 @@ void init_arc_dsc(lv_draw_arc_dsc_t *arc_dsc, lv_color_t color, uint8_t width) {
     arc_dsc->width = width;
 }
 
-void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, const char *symbol) {
-    lv_draw_rect_dsc_t rect_white_dsc;
-    init_rect_dsc(&rect_white_dsc, LVGL_FOREGROUND);
-    lv_draw_rect_dsc_t rect_black_dsc;
-    init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
+void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, bool charging, const char *symbol) {
     lv_draw_label_dsc_t label_dsc_pct;
-    init_label_dsc(&label_dsc_pct, LVGL_FOREGROUND, &lv_font_montserrat_18, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_dsc_pct, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_LEFT);
     lv_draw_label_dsc_t label_dsc_symbol;
     init_label_dsc(&label_dsc_symbol, LVGL_FOREGROUND, &lv_font_montserrat_18,
                   LV_TEXT_ALIGN_RIGHT);
 
-    // Static, upright battery outline "logo" (not a dynamically filled bar).
-    // Body: x=3..12 (10 wide), y=3..22 (20 tall). Nub: x=6..9 on top.
-    lv_canvas_draw_rect(canvas, 6, 0, 4, 3, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 3, 3, 10, 20, &rect_white_dsc);
-    lv_canvas_draw_rect(canvas, 5, 5, 6, 16, &rect_black_dsc);
-
-    // Battery percentage, at least as large as the WPM numbers.
-    char pct_text[6] = {};
-    snprintf(pct_text, sizeof(pct_text), "%d%%", battery_pct);
-    lv_canvas_draw_text(canvas, 17, 2, 45, &label_dsc_pct, pct_text);
+    // No battery outline icon anymore - just the percentage, left-aligned,
+    // starting near the left edge of the row.
+    //
+    // While charging, the nRF52's charge-rail ADC can't read a true battery
+    // voltage, so the percentage itself is typically stuck near 100% in
+    // that state (a hardware limitation, not something this screen can see
+    // through) - show a charging glyph instead of a misleading "100%".
+    if (charging) {
+        lv_canvas_draw_text(canvas, 2, 2, 45, &label_dsc_pct, LV_SYMBOL_CHARGE);
+    } else {
+        char pct_text[6] = {};
+        snprintf(pct_text, sizeof(pct_text), "%d%%", battery_pct);
+        lv_canvas_draw_text(canvas, 2, 2, 45, &label_dsc_pct, pct_text);
+    }
 
     // Connection / output symbol, right-aligned.
-    lv_canvas_draw_text(canvas, 0, 2, CANVAS_SIZE, &label_dsc_symbol, symbol);
+    lv_canvas_draw_text(canvas, 0, 4, CANVAS_SIZE, &label_dsc_symbol, symbol);
 }
 
 void draw_bt_logo(lv_obj_t *canvas, lv_coord_t cx, lv_coord_t cy, lv_coord_t rw, lv_coord_t rh) {
@@ -81,11 +81,14 @@ void draw_bt_logo(lv_obj_t *canvas, lv_coord_t cx, lv_coord_t cy, lv_coord_t rw,
     lv_point_t spine[2] = {{cx, cy - rh}, {cx, cy + rh}};
     lv_canvas_draw_line(canvas, spine, 2, &line_dsc);
 
-    // Diagonal: top point to lower-right point.
-    lv_point_t diag_top[2] = {{cx, cy - rh}, {cx + rw, cy + rh / 2}};
+    // Upper "flag": top of the spine down to the single right-hand point.
+    // Both diagonals meeting at the SAME point (cx + rw, cy) is what makes
+    // this read as the actual Bluetooth logo shape (two triangles sharing
+    // a vertex on the spine's right side) instead of two crossed strokes.
+    lv_point_t diag_top[2] = {{cx, cy - rh}, {cx + rw, cy}};
     lv_canvas_draw_line(canvas, diag_top, 2, &line_dsc);
 
-    // Diagonal: upper-right point to bottom point.
-    lv_point_t diag_bottom[2] = {{cx + rw, cy - rh / 2}, {cx, cy + rh}};
+    // Lower "flag": the same right-hand point down to the bottom of the spine.
+    lv_point_t diag_bottom[2] = {{cx + rw, cy}, {cx, cy + rh}};
     lv_canvas_draw_line(canvas, diag_bottom, 2, &line_dsc);
 }

@@ -26,7 +26,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 // balloon/mountain art. See src/jp_text_image.c.
 LV_IMG_DECLARE(jp_text_img);
 
-// Same physical band as the icon row on the central half: 134-160, i.e.
+// Same physical band as the icon row on the central half: 130-160, i.e.
 // offset 160-68 = 92. See central_widget.c for the full explanation of
 // this offset math.
 #define ICON_OFFSET 92
@@ -45,7 +45,8 @@ static void draw_icon(lv_obj_t *widget, lv_color_t cbuf[], const struct peripher
     init_rect_dsc(&rect_black_dsc, LVGL_BACKGROUND);
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_black_dsc);
 
-    draw_icon_row(canvas, state->battery, state->connected ? LV_SYMBOL_WIFI : LV_SYMBOL_CLOSE);
+    draw_icon_row(canvas, state->battery, state->charging,
+                 state->connected ? LV_SYMBOL_WIFI : LV_SYMBOL_CLOSE);
 
     rotate_canvas(canvas, cbuf);
 }
@@ -111,8 +112,8 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     lv_obj_align(icon, LV_ALIGN_TOP_LEFT, ICON_OFFSET, 0);
     lv_canvas_set_buffer(icon, widget->cbuf_icon, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
 
-    // Static Japanese-text graphic filling the remaining native-x 0..134
-    // (physical height 134 = 160 - the 26px icon row), drawn directly with
+    // Static Japanese-text graphic filling the remaining native-x 0..130
+    // (physical height 130 = 160 - the 30px icon row), drawn directly with
     // no runtime rotation, exactly like the stock balloon/mountain art.
     lv_obj_t *art = lv_img_create(widget->obj);
     lv_img_set_src(art, &jp_text_img);

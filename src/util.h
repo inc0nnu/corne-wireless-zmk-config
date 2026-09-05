@@ -36,22 +36,30 @@ void init_line_dsc(lv_draw_line_dsc_t *line_dsc, lv_color_t color, uint8_t width
 void init_arc_dsc(lv_draw_arc_dsc_t *arc_dsc, lv_color_t color, uint8_t width);
 
 /**
- * Draws the "icon row" shared by both halves: a static, upright battery
- * outline with the percentage written next to it (instead of a dynamically
- * filled bar), plus a single connection/output symbol right-aligned.
+ * Draws the "icon row" shared by both halves: the battery percentage,
+ * left-aligned (no battery outline icon), plus a single connection/output
+ * symbol right-aligned. While charging, the nRF52 charge-rail ADC can't
+ * read a true battery voltage, so zmk_battery_state_of_charge() itself is
+ * typically stuck near 100% in that state - rather than show that
+ * misleading number, a charging glyph is shown instead.
  *
  * This is factored out into one shared function specifically so both halves
  * render it at an identical size/position.
  *
  * @param canvas The (unrotated) canvas to draw into.
- * @param battery_pct Battery charge, 0-100.
+ * @param battery_pct Battery charge, 0-100. Ignored while charging.
+ * @param charging Whether the keyboard half is currently on USB power.
  * @param symbol One of the LV_SYMBOL_* strings (e.g. LV_SYMBOL_WIFI).
  */
-void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, const char *symbol);
+void draw_icon_row(lv_obj_t *canvas, uint8_t battery_pct, bool charging, const char *symbol);
 
 /**
- * Draws a minimal Bluetooth "rune" glyph: a vertical spine plus two
- * diagonals on the right side, centered at (cx, cy).
+ * Draws a minimal Bluetooth "rune" glyph: a vertical spine the full height
+ * of the glyph, plus two diagonals that both meet the spine's endpoints and
+ * a single point on the right at the same height as the spine's center
+ * (cx + rw, cy) - this is what forms the two triangular "flags" that make
+ * it read as the actual Bluetooth logo shape, rather than two unrelated
+ * diagonal strokes.
  *
  * @param rw Half-width of the glyph.
  * @param rh Half-height of the glyph.
