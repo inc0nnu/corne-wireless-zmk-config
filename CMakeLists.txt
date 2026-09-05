@@ -10,10 +10,13 @@ if(CONFIG_ZMK_DISPLAY)
   # Extra (ZMK_EXTRA_MODULES) modules don't inherit the app target's own
   # `include` search path the way shields under zmk/app/boards/shields do,
   # so ZMK's public headers (zmk/display.h, zmk/battery.h, ...) have to be
-  # added explicitly here. ZEPHYR_ZMK_MODULE_DIR is set by Zephyr's module
-  # system for the "zmk" module itself (the same pattern used for e.g.
-  # ZEPHYR_ZMK_STUDIO_MESSAGES_MODULE_DIR in zmk/app/CMakeLists.txt).
-  zephyr_library_include_directories(${ZEPHYR_ZMK_MODULE_DIR}/app/include)
+  # added explicitly here. APPLICATION_SOURCE_DIR is Zephyr's own standard
+  # variable for the app (i.e. zmk/app) source directory - ZMK's own
+  # app/CMakeLists.txt uses it directly (e.g. for zephyr_syscall_header
+  # calls), so it's guaranteed to point at the right place, unlike a
+  # guessed module-specific variable (ZEPHYR_ZMK_MODULE_DIR turned out to
+  # be empty here, which silently produced a bogus "-I/app/include").
+  zephyr_library_include_directories(${APPLICATION_SOURCE_DIR}/include)
   zephyr_library_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
   zephyr_library_sources(src/util.c)
   zephyr_library_sources(src/status_screen.c)
